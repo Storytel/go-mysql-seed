@@ -10,9 +10,9 @@ import (
 )
 
 // ApplySeedWithCmd loads a seed sql file and executes it against the db.
-// expects hostnameAndPort to be on the form `127.0.0.1:8080`
+// expects hostnameAndPort to be on the form `127.0.0.1:3306`
 // Requires MySQL Command-Line Tool to be installed
-func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbName string, seedFilePath string) error {
+func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbPass string, dbName string, seedFilePath string) error {
 	instanceHostAndPort := strings.Split(hostnameAndPort, ":")
 	hostName := instanceHostAndPort[0]
 	if hostName == "localhost" {
@@ -20,7 +20,12 @@ func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbName string, seed
 	}
 	hostPort := instanceHostAndPort[1]
 
-	cmd := exec.Command("mysql", fmt.Sprintf("-h%s", hostName), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-P%s", hostPort), dbName, "-e", fmt.Sprintf("source %s", seedFilePath))
+	var cmd *exec.Cmd = nil
+	if dbPass == "" {
+		cmd = exec.Command("mysql", fmt.Sprintf("-h%s", hostName), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-P%s", hostPort), dbName, "-e", fmt.Sprintf("source %s", seedFilePath))
+	} else {
+		cmd = exec.Command("mysql", fmt.Sprintf("-h%s", hostName), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-p%s", dbPass), fmt.Sprintf("-P%s", hostPort), dbName, "-e", fmt.Sprintf("source %s", seedFilePath))
+	}
 
 	var out, stderr bytes.Buffer
 
