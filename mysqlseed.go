@@ -2,14 +2,17 @@ package mysqlseed
 
 import (
 	"bytes"
+	"database/sql"
 	"fmt"
+	"io/ioutil"
 	"os/exec"
 	"strings"
 )
 
-// ApplySeed loads a seed sql file and executes it against the db.
-// expect hostnameAndPort to be on the form `127.0.0.1:8080`
-func ApplySeed(hostnameAndPort string, dbUser string, dbName string, seedFilePath string) error {
+// ApplySeedWithCmd loads a seed sql file and executes it against the db.
+// expects hostnameAndPort to be on the form `127.0.0.1:8080`
+// Requires MySQL Command-Line Tool to be installed
+func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbName string, seedFilePath string) error {
 	instanceHostAndPort := strings.Split(hostnameAndPort, ":")
 	hostName := instanceHostAndPort[0]
 	if hostName == "localhost" {
@@ -27,6 +30,22 @@ func ApplySeed(hostnameAndPort string, dbUser string, dbName string, seedFilePat
 	err := cmd.Run()
 	if err != nil {
 		return fmt.Errorf("Error executing query. Command Output: %+v\n: %+v, %v", out.String(), stderr.String(), err)
+	}
+
+	return nil
+}
+
+// ApplySeedWithDB loads a seed sql file and executes it against the db.
+// Requires MySQL connection to use `multiStatements=true`
+func ApplySeedWithDB(db *sql.DB, seedFilePath string) error {
+	fileBytes, err := ioutil.ReadFile(seedFilePath)
+	if err != nil {
+		return fmt.Errorf("Could not read seed-file, ", err)
+	}
+
+	_, err = db.Exec(string(fileBytes))
+	if err != nil {
+		return fmt.Errorf("Could not apply seed, ", err)
 	}
 
 	return nil
