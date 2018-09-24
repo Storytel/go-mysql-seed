@@ -58,7 +58,7 @@ func TestDatabaseIntegration(t *testing.T) {
 
 	// Test your integration
 	_, err = exmapleService.Create()
-	assert.Error(t, err)
+	assert.NoError(t, err)
 }
 ```
 
@@ -92,6 +92,10 @@ func TestDatabaseIntegration(t *testing.T) {
 
 	// Test your integration
 	_, err = exmapleService.Create()
-	assert.Error(t, err)
+	assert.NoError(t, err)
 }
 ```
+
+## Storytel Go
+
+https://github.com/Storytel/go-docker-initiator - Utility for starting docker containers from Go.
