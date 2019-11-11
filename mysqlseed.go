@@ -27,14 +27,12 @@ func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbPass string, dbNa
 		cmd = exec.Command("mysql", fmt.Sprintf("-h%s", hostName), fmt.Sprintf("-u%s", dbUser), fmt.Sprintf("-p%s", dbPass), fmt.Sprintf("-P%s", hostPort), dbName, "-e", fmt.Sprintf("source %s", seedFilePath))
 	}
 
-	var out, stderr bytes.Buffer
-
 	cmd.Stdout = &bytes.Buffer{}
 	cmd.Stderr = &bytes.Buffer{}
 
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Error executing query. Command Output: %+v\n: %+v, %v", out.String(), stderr.String(), err)
+		return fmt.Errorf("Error executing query.\nCommand Stdout: %+v\nCommand Stderr: %+v\nError: %v", cmd.Stdout, cmd.Stderr, err)
 	}
 
 	return nil
