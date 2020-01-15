@@ -50,7 +50,7 @@ import (
 )
 
 func TestDatabaseIntegration(t *testing.T) {
-	// Establish a database connection to the exposed environment variables
+	// Establish a database connection
 	db, err := InitAndCreateDatabase()
 	assert.NoError(t, err)
 	defer db.Close()
@@ -84,7 +84,7 @@ import (
 )
 
 func TestDatabaseIntegration(t *testing.T) {
-	// Establish a database connection to the exposed environment variables
+	// Establish a database connection
 	db, err := InitAndCreateDatabase()
 	assert.NoError(t, err)
 	defer db.Close()
