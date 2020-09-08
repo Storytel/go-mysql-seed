@@ -32,7 +32,7 @@ func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbPass string, dbNa
 
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("Error executing query.\nCommand Stdout: %+v\nCommand Stderr: %+v\nError: %v", cmd.Stdout, cmd.Stderr, err)
+		return fmt.Errorf("error executing query.\nCommand Stdout: %+v\nCommand Stderr: %+v\nError: %v", cmd.Stdout, cmd.Stderr, err)
 	}
 
 	return nil
@@ -43,12 +43,12 @@ func ApplySeedWithCmd(hostnameAndPort string, dbUser string, dbPass string, dbNa
 func ApplySeedWithDB(db *sql.DB, seedFilePath string) error {
 	fileBytes, err := ioutil.ReadFile(seedFilePath)
 	if err != nil {
-		return fmt.Errorf("Could not read seed-file, ", err)
+		return fmt.Errorf("could not read seed-file.\nError: %v", err)
 	}
 
 	_, err = db.Exec(string(fileBytes))
 	if err != nil {
-		return fmt.Errorf("Could not apply seed, ", err)
+		return fmt.Errorf("could not apply seed.\nError: %v", err)
 	}
 
 	return nil
